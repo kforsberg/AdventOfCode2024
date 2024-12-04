@@ -4,22 +4,26 @@ use std::fs;
 fn main() {
     let binding = fs::read_to_string("./inputs/input.txt");
     let input = binding.as_ref().unwrap();
-
-    let invalid_expression_regex = Regex::new(r"don't\(\).*?do\(\)").unwrap();
-    let scrubbed_instructiuons = invalid_expression_regex.replace_all(&input, "<REPLACED>");
-
-    println!("{}", scrubbed_instructiuons);
     
-    let regex_expression = Regex::new(r"mul\([0-9]{1,3},[0-9]{1,3}\)").unwrap();
+    let regex_expression = Regex::new(r"do\(\)|don't\(\)|mul\([0-9]{1,3},[0-9]{1,3}\)").unwrap();
     let matches: Vec<&str> = regex_expression
-        .find_iter(&scrubbed_instructiuons)
+        .find_iter(input)
         .map(|m| m.as_str())
         .collect();
 
     let mut total = 0;
+    let mut multiplication_enabled = true;
 
     for instruction in matches {
-        total += execute_instruction(instruction);
+        if instruction == "do()" {
+            multiplication_enabled = true;
+        } else if instruction == "don't()" {
+            multiplication_enabled = false;
+        } else {
+            if multiplication_enabled {
+                total += execute_instruction(instruction);
+            }
+        }
     }
 
     println!("The total is {}", total);
