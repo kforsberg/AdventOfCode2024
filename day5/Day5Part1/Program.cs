@@ -5,8 +5,7 @@ var updates = BuildUpdates(split[1]);
 var validUpdates = updates.Where(x => IsUpdateValid(x, orderingRules));
 var sum = validUpdates.Sum(x => GetMiddleUpdate(x));
 
-Console.WriteLine($"There are {validUpdates.Count()} valid updates");
-Console.WriteLine($"The sum of the middles is {sum}");
+Console.WriteLine($"There are {validUpdates.Count()} invalid updates");
 
 
 IEnumerable<PageOrderRule> BuildOrderingRules(string orderingText)
